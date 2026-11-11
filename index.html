@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,7 +55,7 @@
           <div class="hero-copy">
             <div class="eyebrow light">AIRWATCH MONITORING NETWORK <span class="live-tag"><i></i> LIVE</span></div>
             <h2>Understand the air<br><em>around you.</em></h2>
-            <p>Environmental readings from your ESP32 sensor station, delivered through Adafruit IO.</p>
+            <p>Environmental readings from your ESP32 sensor station, delivered through EMQX Cloud.</p>
             <div class="hero-meta"><span class="hero-orb"></span><span id="heroStatus">Waiting for sensor data</span><span class="meta-divider"></span><span id="heroTime">Last update —</span></div>
           </div>
           <div class="hero-visual" aria-hidden="true">
@@ -64,7 +65,7 @@
           </div>
         </div>
 
-        <div class="section-heading"><div><div class="eyebrow">CURRENT CONDITIONS</div><h2>Sensor overview</h2></div><div class="section-note">Auto-refresh every 15 seconds</div></div>
+        <div class="section-heading"><div><div class="eyebrow">CURRENT CONDITIONS</div><h2>Sensor overview</h2></div><div class="section-note">Live MQTT sensor readings</div></div>
         <div class="sensor-grid">
           <article class="sensor-card accent-cyan">
             <div class="sensor-top"><div class="sensor-icon">M1</div><span class="sensor-state" id="state-mq135">NO DATA</span></div>
@@ -114,14 +115,14 @@
             <div class="status-row"><span>Wi-Fi / cloud access</span><strong id="statusCloud">Checking</strong></div>
             <div class="status-row"><span>Sensor data</span><strong id="statusSensors">Waiting</strong></div>
             <div class="status-row"><span>Last successful poll</span><strong id="statusPoll">—</strong></div>
-            <div class="status-row"><span>Feed account</span><strong id="statusAccount">Not configured</strong></div>
+            <div class="status-row"><span>MQTT broker</span><strong id="statusAccount">EMQX Cloud</strong></div>
             <button class="text-action" data-goto="device">View device health <span>↗</span></button>
           </article>
         </div>
       </section>
 
       <section class="page" id="page-analytics">
-        <div class="page-intro"><div class="eyebrow">DATA EXPLORATION</div><h2>Analytics</h2><p>Explore recent Adafruit IO history for each sensor feed.</p></div>
+        <div class="page-intro"><div class="eyebrow">DATA EXPLORATION</div><h2>Analytics</h2><p>Explore recent sensor readings received through EMQX Cloud.</p></div>
         <article class="panel analytics-panel">
           <div class="analytics-controls">
             <label>Sensor<select id="analyticsMetric" class="select"><option value="mq135">MQ-135 · raw ADC</option><option value="mq2">MQ-2 · raw ADC</option><option value="temperature">Temperature · °C</option><option value="humidity">Humidity · % RH</option><option value="pressure">Pressure · hPa</option></select></label>
@@ -129,10 +130,10 @@
             <button class="button button-secondary" id="loadHistory">Load history ↻</button>
           </div>
           <div class="analytics-summary"><div><span>Latest value</span><strong id="analyticsLatest">—</strong></div><div><span>Average</span><strong id="analyticsAverage">—</strong></div><div><span>Minimum</span><strong id="analyticsMin">—</strong></div><div><span>Maximum</span><strong id="analyticsMax">—</strong></div></div>
-          <div class="large-chart-wrap"><canvas id="analyticsChart"></canvas><div class="chart-empty" id="analyticsEmpty">Choose a feed and load its history.</div></div>
-          <div class="chart-foot"><span>Values are shown as received from Adafruit IO.</span><span id="historyCount">0 points</span></div>
+          <div class="large-chart-wrap"><canvas id="analyticsChart"></canvas><div class="chart-empty" id="analyticsEmpty">Choose a sensor and load its history.</div></div>
+          <div class="chart-foot"><span>Values are shown as received from EMQX Cloud.</span><span id="historyCount">0 points</span></div>
         </article>
-        <div class="notice"><span>ⓘ</span><p><strong>About history:</strong> This page requests saved feed data from Adafruit IO. It requires the feeds to be publicly readable. The browser does not store a permanent history of its own.</p></div>
+        <div class="notice"><span>ⓘ</span><p><strong>About history:</strong> Historical readings depend on the data storage configured for your EMQX Cloud project. The browser does not store a permanent history of its own.</p></div>
       </section>
 
       <section class="page" id="page-alerts">
@@ -152,25 +153,25 @@
       <section class="page" id="page-device">
         <div class="page-intro"><div class="eyebrow">CONNECTIVITY & HARDWARE</div><h2>Device health</h2><p>Monitor data availability and the connection between your station and the cloud.</p></div>
         <div class="health-grid">
-          <article class="health-card"><span class="health-icon">⌁</span><span class="health-label">Cloud API</span><strong id="healthApi">Checking</strong><small id="healthApiDetail">Waiting for response</small></article>
-          <article class="health-card"><span class="health-icon">◈</span><span class="health-label">Feed account</span><strong id="healthAccount">—</strong><small>Configured public username</small></article>
-          <article class="health-card"><span class="health-icon">◷</span><span class="health-label">Last browser poll</span><strong id="healthPoll">—</strong><small>Updates every 15 seconds</small></article>
-          <article class="health-card"><span class="health-icon">▦</span><span class="health-label">Feeds responding</span><strong id="healthFeeds">0 / 5</strong><small id="healthFeedsDetail">No feed data received yet</small></article>
+          <article class="health-card"><span class="health-icon">⌁</span><span class="health-label">MQTT Broker</span><strong id="healthApi">Checking</strong><small id="healthApiDetail">Waiting for response</small></article>
+          <article class="health-card"><span class="health-icon">◈</span><span class="health-label">Cloud service</span><strong id="healthAccount">EMQX Cloud</strong><small>MQTT broker connection</small></article>
+          <article class="health-card"><span class="health-icon">◷</span><span class="health-label">Last browser update</span><strong id="healthPoll">—</strong><small>Updates when MQTT messages arrive</small></article>
+          <article class="health-card"><span class="health-icon">▦</span><span class="health-label">Sensors responding</span><strong id="healthFeeds">0 / 5</strong><small id="healthFeedsDetail">No sensor data received yet</small></article>
         </div>
         <article class="panel">
-          <div class="panel-head"><div><div class="eyebrow">FEED DIAGNOSTICS</div><h3>Sensor availability</h3></div><button class="button button-secondary" id="deviceRefresh">Check again ↻</button></div>
+          <div class="panel-head"><div><div class="eyebrow">SENSOR DIAGNOSTICS</div><h3>Sensor availability</h3></div><button class="button button-secondary" id="deviceRefresh">Check again ↻</button></div>
           <div class="diagnostic-list" id="diagnosticList"></div>
         </article>
-        <div class="notice"><span>ⓘ</span><p>This website can check whether public Adafruit IO feeds respond. It cannot directly inspect ESP32 Wi-Fi signal strength, uptime or hardware faults unless your firmware publishes those diagnostics as additional feeds.</p></div>
+        <div class="notice"><span>ⓘ</span><p>This website can display sensor messages received from EMQX Cloud. It cannot directly inspect ESP32 Wi-Fi signal strength, uptime or hardware faults unless your firmware publishes those diagnostics.</p></div>
       </section>
 
       <section class="page" id="page-reports">
-        <div class="page-intro"><div class="eyebrow">EXPORT & REVIEW</div><h2>Reports</h2><p>Download the readings currently available in your Adafruit IO feeds.</p></div>
+        <div class="page-intro"><div class="eyebrow">EXPORT & REVIEW</div><h2>Reports</h2><p>Download the readings currently available in your AIRWATCH sensor data.</p></div>
         <article class="panel report-panel">
-          <div class="report-graphic"><div class="report-ring"><span>AW</span></div><div><div class="eyebrow">AIRWATCH DATA EXPORT</div><h3>Sensor data report</h3><p>Export the latest cloud samples for all configured sensors as a CSV file.</p></div></div>
-          <div class="report-stats"><div><span>Feeds checked</span><strong id="reportFeeds">0 / 5</strong></div><div><span>Samples loaded</span><strong id="reportSamples">0</strong></div><div><span>Last refresh</span><strong id="reportUpdated">—</strong></div></div>
+          <div class="report-graphic"><div class="report-ring"><span>AW</span></div><div><div class="eyebrow">AIRWATCH DATA EXPORT</div><h3>Sensor data report</h3><p>Export the latest available samples for all configured sensors as a CSV file.</p></div></div>
+          <div class="report-stats"><div><span>Sensors checked</span><strong id="reportFeeds">0 / 5</strong></div><div><span>Samples loaded</span><strong id="reportSamples">0</strong></div><div><span>Last refresh</span><strong id="reportUpdated">—</strong></div></div>
           <button class="button button-primary" id="downloadCsv">Download CSV report ↓</button>
-          <p class="fine-print">The export contains the latest history fetched from Adafruit IO. It is not a certified environmental compliance report.</p>
+          <p class="fine-print">The export contains the sensor readings available to this dashboard. It is not a certified environmental compliance report.</p>
         </article>
       </section>
 
