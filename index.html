@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="description" content="AIRWATCH environmental sensor monitoring dashboard." />
+  <title>AIRWATCH | Environmental Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div><div class="brand-name">AIRWATCH</div><div class="brand-sub">ENVIRONMENTAL INTELLIGENCE</div></div>
+      </div>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="nav">
+        <button class="nav-link active" data-page="overview"><span class="nav-icon">◫</span> Overview</button>
+        <button class="nav-link" data-page="analytics"><span class="nav-icon">⌁</span> Analytics</button>
+        <button class="nav-link" data-page="alerts"><span class="nav-icon">◉</span> Alerts <span class="nav-count" id="alertNavCount">0</span></button>
+        <button class="nav-link" data-page="device"><span class="nav-icon">⌘</span> Device health</button>
+        <button class="nav-link" data-page="reports"><span class="nav-icon">▤</span> Reports</button>
+        <button class="nav-link" data-page="guide"><span class="nav-icon">ⓘ</span> Sensor guide</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="connection-card">
+          <div class="connection-head"><span class="pulse-dot" id="sideDot"></span><span id="sideConnection">Checking connection</span></div>
+          <div class="connection-sub" id="sideUpdated">Waiting for first reading</div>
+        </div>
+        <button class="nav-link appearance-btn" id="themeToggle"><span class="nav-icon">◐</span> Switch appearance</button>
+        <div class="sidebar-foot">AIRWATCH PROJECT <span>·</span> v3.0</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="top-left">
+          <button class="mobile-menu" id="menuToggle" aria-label="Open navigation">☰</button>
+          <div><div class="eyebrow" id="dateLabel">ENVIRONMENTAL MONITORING</div><h1 id="pageTitle">Overview</h1></div>
+        </div>
+        <div class="top-actions">
+          <div class="system-pill"><span class="pulse-dot" id="topDot"></span><span id="topConnection">Connecting</span></div>
+          <button class="icon-button" id="refreshBtn" title="Refresh readings" aria-label="Refresh">↻</button>
+        </div>
+      </header>
+
+      <section class="page active" id="page-overview">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow light">AIRWATCH MONITORING NETWORK <span class="live-tag"><i></i> LIVE</span></div>
+            <h2>Understand the air<br><em>around you.</em></h2>
+            <p>Environmental readings from your ESP32 sensor station, delivered through Adafruit IO.</p>
+            <div class="hero-meta"><span class="hero-orb"></span><span id="heroStatus">Waiting for sensor data</span><span class="meta-divider"></span><span id="heroTime">Last update —</span></div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+            <div class="core"><div class="core-inner">AW</div></div>
+            <div class="orbit-label label-a">SENSOR ARRAY</div><div class="orbit-label label-b">ESP32 / CLOUD</div>
+          </div>
+        </div>
+
+        <div class="section-heading"><div><div class="eyebrow">CURRENT CONDITIONS</div><h2>Sensor overview</h2></div><div class="section-note">Auto-refresh every 15 seconds</div></div>
+        <div class="sensor-grid">
+          <article class="sensor-card accent-cyan">
+            <div class="sensor-top"><div class="sensor-icon">M1</div><span class="sensor-state" id="state-mq135">NO DATA</span></div>
+            <div class="sensor-name">MQ-135 <span>Air quality response</span></div>
+            <div class="sensor-reading"><strong id="value-mq135">—</strong><small>raw ADC</small></div>
+            <div class="sensor-foot"><span>Gas sensor</span><span id="time-mq135">No reading yet</span></div>
+            <div class="meter"><i id="bar-mq135"></i></div>
+          </article>
+          <article class="sensor-card accent-violet">
+            <div class="sensor-top"><div class="sensor-icon">M2</div><span class="sensor-state" id="state-mq2">NO DATA</span></div>
+            <div class="sensor-name">MQ-2 <span>Smoke / combustible gas response</span></div>
+            <div class="sensor-reading"><strong id="value-mq2">—</strong><small>raw ADC</small></div>
+            <div class="sensor-foot"><span>Gas sensor</span><span id="time-mq2">No reading yet</span></div>
+            <div class="meter"><i id="bar-mq2"></i></div>
+          </article>
+          <article class="sensor-card accent-amber">
+            <div class="sensor-top"><div class="sensor-icon">°C</div><span class="sensor-state" id="state-temperature">NO DATA</span></div>
+            <div class="sensor-name">Temperature <span>BME280 ambient reading</span></div>
+            <div class="sensor-reading"><strong id="value-temperature">—</strong><small>°C</small></div>
+            <div class="sensor-foot"><span>Environment</span><span id="time-temperature">No reading yet</span></div>
+            <div class="meter"><i id="bar-temperature"></i></div>
+          </article>
+          <article class="sensor-card accent-green">
+            <div class="sensor-top"><div class="sensor-icon">%</div><span class="sensor-state" id="state-humidity">NO DATA</span></div>
+            <div class="sensor-name">Humidity <span>BME280 relative humidity</span></div>
+            <div class="sensor-reading"><strong id="value-humidity">—</strong><small>% RH</small></div>
+            <div class="sensor-foot"><span>Environment</span><span id="time-humidity">No reading yet</span></div>
+            <div class="meter"><i id="bar-humidity"></i></div>
+          </article>
+          <article class="sensor-card accent-blue">
+            <div class="sensor-top"><div class="sensor-icon">P</div><span class="sensor-state" id="state-pressure">NO DATA</span></div>
+            <div class="sensor-name">Pressure <span>BME280 barometric pressure</span></div>
+            <div class="sensor-reading"><strong id="value-pressure">—</strong><small>hPa</small></div>
+            <div class="sensor-foot"><span>Environment</span><span id="time-pressure">No reading yet</span></div>
+            <div class="meter"><i id="bar-pressure"></i></div>
+          </article>
+        </div>
+
+        <div class="overview-bottom">
+          <article class="panel chart-panel">
+            <div class="panel-head"><div><div class="eyebrow">RECENT ACTIVITY</div><h3>Sensor trend</h3></div><select id="overviewMetric" class="select"><option value="mq135">MQ-135</option><option value="mq2">MQ-2</option><option value="temperature">Temperature</option><option value="humidity">Humidity</option><option value="pressure">Pressure</option></select></div>
+            <div class="chart-wrap"><canvas id="overviewChart"></canvas><div class="chart-empty" id="overviewEmpty">Historical readings will appear here when available.</div></div>
+            <div class="chart-foot"><span>Cloud history · latest samples</span><span id="overviewRange">—</span></div>
+          </article>
+          <article class="panel status-panel">
+            <div class="panel-head"><div><div class="eyebrow">SYSTEM SNAPSHOT</div><h3>Station status</h3></div><span class="status-mark">●</span></div>
+            <div class="status-row"><span>Wi-Fi / cloud access</span><strong id="statusCloud">Checking</strong></div>
+            <div class="status-row"><span>Sensor data</span><strong id="statusSensors">Waiting</strong></div>
+            <div class="status-row"><span>Last successful poll</span><strong id="statusPoll">—</strong></div>
+            <div class="status-row"><span>Feed account</span><strong id="statusAccount">Not configured</strong></div>
+            <button class="text-action" data-goto="device">View device health <span>↗</span></button>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-analytics">
+        <div class="page-intro"><div class="eyebrow">DATA EXPLORATION</div><h2>Analytics</h2><p>Explore recent Adafruit IO history for each sensor feed.</p></div>
+        <article class="panel analytics-panel">
+          <div class="analytics-controls">
+            <label>Sensor<select id="analyticsMetric" class="select"><option value="mq135">MQ-135 · raw ADC</option><option value="mq2">MQ-2 · raw ADC</option><option value="temperature">Temperature · °C</option><option value="humidity">Humidity · % RH</option><option value="pressure">Pressure · hPa</option></select></label>
+            <label>History window<select id="historyWindow" class="select"><option value="50">Latest 50 readings</option><option value="100" selected>Latest 100 readings</option><option value="500">Latest 500 readings</option></select></label>
+            <button class="button button-secondary" id="loadHistory">Load history ↻</button>
+          </div>
+          <div class="analytics-summary"><div><span>Latest value</span><strong id="analyticsLatest">—</strong></div><div><span>Average</span><strong id="analyticsAverage">—</strong></div><div><span>Minimum</span><strong id="analyticsMin">—</strong></div><div><span>Maximum</span><strong id="analyticsMax">—</strong></div></div>
+          <div class="large-chart-wrap"><canvas id="analyticsChart"></canvas><div class="chart-empty" id="analyticsEmpty">Choose a feed and load its history.</div></div>
+          <div class="chart-foot"><span>Values are shown as received from Adafruit IO.</span><span id="historyCount">0 points</span></div>
+        </article>
+        <div class="notice"><span>ⓘ</span><p><strong>About history:</strong> This page requests saved feed data from Adafruit IO. It requires the feeds to be publicly readable. The browser does not store a permanent history of its own.</p></div>
+      </section>
+
+      <section class="page" id="page-alerts">
+        <div class="page-intro"><div class="eyebrow">EVENT MONITORING</div><h2>Alerts & events</h2><p>Recent threshold events and sensor availability changes.</p></div>
+        <div class="alert-summary">
+          <div class="summary-tile"><span>Critical events</span><strong id="criticalCount">0</strong></div>
+          <div class="summary-tile"><span>Warnings</span><strong id="warningCount">0</strong></div>
+          <div class="summary-tile"><span>Unavailable feeds</span><strong id="offlineCount">5</strong></div>
+        </div>
+        <article class="panel">
+          <div class="panel-head"><div><div class="eyebrow">EVENT LOG</div><h3>Recent activity</h3></div><button class="button button-quiet" id="clearAlerts">Clear local log</button></div>
+          <div class="event-list" id="eventList"><div class="empty-state">No events recorded yet. Events will appear as readings arrive.</div></div>
+        </article>
+        <div class="notice"><span>!</span><p><strong>Threshold note:</strong> MQ warning and critical limits are example raw ADC values in this project. They are not certified safety limits, AQI values or gas concentrations. Calibrate the sensors before relying on alerts.</p></div>
+      </section>
+
+      <section class="page" id="page-device">
+        <div class="page-intro"><div class="eyebrow">CONNECTIVITY & HARDWARE</div><h2>Device health</h2><p>Monitor data availability and the connection between your station and the cloud.</p></div>
+        <div class="health-grid">
+          <article class="health-card"><span class="health-icon">⌁</span><span class="health-label">Cloud API</span><strong id="healthApi">Checking</strong><small id="healthApiDetail">Waiting for response</small></article>
+          <article class="health-card"><span class="health-icon">◈</span><span class="health-label">Feed account</span><strong id="healthAccount">—</strong><small>Configured public username</small></article>
+          <article class="health-card"><span class="health-icon">◷</span><span class="health-label">Last browser poll</span><strong id="healthPoll">—</strong><small>Updates every 15 seconds</small></article>
+          <article class="health-card"><span class="health-icon">▦</span><span class="health-label">Feeds responding</span><strong id="healthFeeds">0 / 5</strong><small id="healthFeedsDetail">No feed data received yet</small></article>
+        </div>
+        <article class="panel">
+          <div class="panel-head"><div><div class="eyebrow">FEED DIAGNOSTICS</div><h3>Sensor availability</h3></div><button class="button button-secondary" id="deviceRefresh">Check again ↻</button></div>
+          <div class="diagnostic-list" id="diagnosticList"></div>
+        </article>
+        <div class="notice"><span>ⓘ</span><p>This website can check whether public Adafruit IO feeds respond. It cannot directly inspect ESP32 Wi-Fi signal strength, uptime or hardware faults unless your firmware publishes those diagnostics as additional feeds.</p></div>
+      </section>
+
+      <section class="page" id="page-reports">
+        <div class="page-intro"><div class="eyebrow">EXPORT & REVIEW</div><h2>Reports</h2><p>Download the readings currently available in your Adafruit IO feeds.</p></div>
+        <article class="panel report-panel">
+          <div class="report-graphic"><div class="report-ring"><span>AW</span></div><div><div class="eyebrow">AIRWATCH DATA EXPORT</div><h3>Sensor data report</h3><p>Export the latest cloud samples for all configured sensors as a CSV file.</p></div></div>
+          <div class="report-stats"><div><span>Feeds checked</span><strong id="reportFeeds">0 / 5</strong></div><div><span>Samples loaded</span><strong id="reportSamples">0</strong></div><div><span>Last refresh</span><strong id="reportUpdated">—</strong></div></div>
+          <button class="button button-primary" id="downloadCsv">Download CSV report ↓</button>
+          <p class="fine-print">The export contains the latest history fetched from Adafruit IO. It is not a certified environmental compliance report.</p>
+        </article>
+      </section>
+
+      <section class="page" id="page-guide">
+        <div class="page-intro"><div class="eyebrow">HARDWARE REFERENCE</div><h2>Sensor guide</h2><p>What each sensor measures, how to interpret its readings and important limitations.</p></div>
+        <div class="guide-grid">
+          <article class="guide-card"><div class="guide-code cyan">M1</div><div class="eyebrow">GAS SENSOR</div><h3>MQ-135</h3><p>Broad gas-response sensor commonly used in educational air-quality projects. Its output changes in response to several gases and environmental conditions.</p><div class="guide-spec"><span>Website unit</span><strong>Raw ADC (0–4095)</strong></div><div class="guide-warning">Not a direct CO₂ measurement or certified AQI sensor. Requires warm-up and calibration.</div></article>
+          <article class="guide-card"><div class="guide-code violet">M2</div><div class="eyebrow">GAS / SMOKE SENSOR</div><h3>MQ-2</h3><p>Metal-oxide sensor responsive to smoke and various combustible gases. The raw analog value is useful for observing changes in the sensor response.</p><div class="guide-spec"><span>Website unit</span><strong>Raw ADC (0–4095)</strong></div><div class="guide-warning">Not a calibrated gas concentration or life-safety alarm. Requires warm-up and calibration.</div></article>
+          <article class="guide-card"><div class="guide-code green">B</div><div class="eyebrow">ENVIRONMENTAL SENSOR</div><h3>BME280</h3><p>Digital environmental sensor providing ambient temperature, relative humidity and barometric pressure over I²C.</p><div class="guide-spec"><span>Website units</span><strong>°C · % RH · hPa</strong></div><div class="guide-warning">Placement, heat from nearby electronics and airflow can affect measurements.</div></article>
+        </div>
+        <div class="notice"><span>⚡</span><p><strong>Electrical safety:</strong> ESP32 GPIO pins are not 5V tolerant. Typical MQ modules use a 5V heater supply; their analog output must be conditioned so it never exceeds 3.3V at the ESP32 ADC input. Use a shared ground with the external supply.</p></div>
+      </section>
+
+      <footer class="footer"><span>AIRWATCH · ENVIRONMENTAL INTELLIGENCE</span><span>Built for educational monitoring · Not a certified safety instrument</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
